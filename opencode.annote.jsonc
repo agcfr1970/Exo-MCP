@@ -1,0 +1,90 @@
+// ============================================================================
+//  opencode.annote.jsonc — COPIE DE DOCUMENTATION UNIQUEMENT
+//  Ce fichier n'est PAS lu par OpenCode : le fichier actif est opencode.json.
+//  Le JSON standard n'autorise pas les commentaires ; cette copie en .jsonc
+//  sert de référence pédagogique, ligne par ligne.
+// ============================================================================
+{
+  // Schéma JSON officiel : active l'autocomplétion et la validation dans l'éditeur.
+  "$schema": "https://opencode.ai/config.json",
+  // Modèle par défaut de l'application : llama3.2 servi par Ollama en local.
+  "model": "ollama/llama3.2:latest",
+  // Agent lancé automatiquement au démarrage : "exo", défini plus bas.
+  "default_agent": "exo",
+  // Début de la section MCP : déclaration des serveurs d'outils externes.
+  "mcp": {
+    // Début de la liste des serveurs MCP (un seul ici, nommé "actions").
+    "servers": {
+      // Serveur MCP "actions" : c'est le nom qui préfixe les outils (actions_*).
+      "actions": {
+        // Type "local" : le serveur est un processus lancé sur la machine.
+        "type": "local",
+        // Commande exacte utilisée pour démarrer le serveur MCP.
+        "command": [
+          // Interpréteur Python du venv du projet (contient mcp et pyautogui).
+          "C:\\Users\\public\\ExoMCP\\.venv\\Scripts\\python.exe",
+          // Script Python qui contient les trois outils MCP.
+          "C:\\Users\\public\\ExoMCP\\server.py"
+        ],
+        // Variables d'environnement injectées dans le processus du serveur MCP.
+        "environment": {
+          // Force le profil utilisateur sur "orsys" même si OpenCode tourne depuis "public".
+          "USERPROFILE": "C:\\Users\\orsys",
+          // Lettre du lecteur du profil, utilisée par le repli de chemin_accueil().
+          "HOMEDRIVE": "C:",
+          // Chemin du profil, complète HOMEDRIVE pour reconstruire C:\Users\orsys.
+          "HOMEPATH": "\\Users\\orsys"
+        },
+        // Désactive le mode Code Mode : les outils MCP sont exposés directement au modèle.
+        "codemode": false
+      }
+    }
+  },
+  // Début de la section agents : personnalisation des agents OpenCode.
+  "agents": {
+    // Agent principal "exo" : celui qui reçoit les demandes de l'utilisateur.
+    "exo": {
+      // Description affichée dans l'interface pour résumer les capacités de l'agent.
+      "description": "Ouvre le dossier TP du Bureau, Docker Desktop ou les variables d'environnement",
+      // Mode "primary" : l'agent peut être sélectionné comme agent principal.
+      "mode": "primary",
+      // Modèle utilisé par cet agent (llama3.2 local via Ollama).
+      "model": "ollama/llama3.2:latest",
+      // Prompt système court : un prompt long fait écrire du JSON en texte à llama3.2.
+      "system": "Tu disposes de trois outils. Demande sur Docker : appelle actions_ouvrir_docker_desktop. Demande sur le dossier TP : appelle actions_ouvrir_dossier_tp avec nom_dossier='tp'. Demande sur les variables d'environnement : appelle actions_ouvrir_variables_environnement. Pour toute autre demande, réponds exactement : Je ne peux pas répondre à cette demande. N'écris jamais de JSON en texte : utilise toujours un appel d'outil.",
+      // Début des règles de permission : tout est refusé sauf les trois outils MCP.
+      "permissions": [
+        // Refuse l'outil intégré "execute" (exécution de code dans le sandbox).
+        { "action": "execute", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "shell" (commandes système arbitraires).
+        { "action": "shell", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "read" (lecture de fichiers du projet).
+        { "action": "read", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "edit" (modification de fichiers).
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "glob" (recherche de fichiers par motif).
+        { "action": "glob", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "grep" (recherche de texte dans les fichiers).
+        { "action": "grep", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "subagent" (délégation à un agent enfant).
+        { "action": "subagent", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "skill" (chargement de compétences OpenCode).
+        { "action": "skill", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "question" (questions interactives à l'utilisateur).
+        { "action": "question", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "webfetch" (téléchargement de pages web).
+        { "action": "webfetch", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré "websearch" (recherche web).
+        { "action": "websearch", "resource": "*", "effect": "deny" },
+        // Refuse l'outil intégré de génération d'images.
+        { "action": "experimental_image_generate", "resource": "*", "effect": "deny" },
+        // Autorise l'outil MCP qui ouvre le dossier TP du Bureau.
+        { "action": "actions_ouvrir_dossier_tp", "resource": "*", "effect": "allow" },
+        // Autorise l'outil MCP qui démarre Docker Desktop.
+        { "action": "actions_ouvrir_docker_desktop", "resource": "*", "effect": "allow" },
+        // Autorise l'outil MCP qui ouvre les variables d'environnement Windows.
+        { "action": "actions_ouvrir_variables_environnement", "resource": "*", "effect": "allow" }
+      ]
+    }
+  }
+}

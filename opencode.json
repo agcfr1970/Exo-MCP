@@ -1,0 +1,47 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "ollama/llama3.2:latest",
+  "default_agent": "exo",
+  "mcp": {
+    "servers": {
+      "actions": {
+        "type": "local",
+        "command": [
+          "C:\\Users\\public\\ExoMCP\\.venv\\Scripts\\python.exe",
+          "C:\\Users\\public\\ExoMCP\\server.py"
+        ],
+        "environment": {
+          "USERPROFILE": "C:\\Users\\orsys",
+          "HOMEDRIVE": "C:",
+          "HOMEPATH": "\\Users\\orsys"
+        },
+        "codemode": false
+      }
+    }
+  },
+  "agents": {
+    "exo": {
+      "description": "Ouvre le dossier TP du Bureau, Docker Desktop ou les variables d'environnement",
+      "mode": "primary",
+      "model": "ollama/llama3.2:latest",
+      "system": "Tu disposes de trois outils. Demande sur Docker : appelle actions_ouvrir_docker_desktop. Demande sur le dossier TP : appelle actions_ouvrir_dossier_tp avec nom_dossier='tp'. Demande sur les variables d'environnement : appelle actions_ouvrir_variables_environnement. Pour toute autre demande, réponds exactement : Je ne peux pas répondre à cette demande. N'écris jamais de JSON en texte : utilise toujours un appel d'outil.",
+      "permissions": [
+        { "action": "execute", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "*", "effect": "deny" },
+        { "action": "read", "resource": "*", "effect": "deny" },
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "glob", "resource": "*", "effect": "deny" },
+        { "action": "grep", "resource": "*", "effect": "deny" },
+        { "action": "subagent", "resource": "*", "effect": "deny" },
+        { "action": "skill", "resource": "*", "effect": "deny" },
+        { "action": "question", "resource": "*", "effect": "deny" },
+        { "action": "webfetch", "resource": "*", "effect": "deny" },
+        { "action": "websearch", "resource": "*", "effect": "deny" },
+        { "action": "experimental_image_generate", "resource": "*", "effect": "deny" },
+        { "action": "actions_ouvrir_dossier_tp", "resource": "*", "effect": "allow" },
+        { "action": "actions_ouvrir_docker_desktop", "resource": "*", "effect": "allow" },
+        { "action": "actions_ouvrir_variables_environnement", "resource": "*", "effect": "allow" }
+      ]
+    }
+  }
+}
