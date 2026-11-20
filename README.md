@@ -90,7 +90,7 @@ cd C:\users\public\ExoMCP
 py -3.14 -m venv .venv
 
 # 3. Installer les dépendances
-.\.venv\Scripts\python.exe -m pip install "mcp[cli]" pyautogui
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 
 # 4. Vérifier que le serveur démarre
 .\.venv\Scripts\python.exe -m py_compile server.py
@@ -318,6 +318,7 @@ C:\users\public\ExoMCP\
 ├── server.py               # Serveur MCP (3 outils) — commenté ligne par ligne
 ├── opencode.json           # Configuration OpenCode active (JSON strict, sans commentaires)
 ├── opencode.annote.jsonc   # Copie documentaire commentée ligne par ligne (non chargée)
+├── requirements.txt        # Dépendances Python épinglées (mcp, PyAutoGUI)
 ├── README.md               # Ce document
 └── ISSUE.md                # Rétrospective / rapport d'incident du projet
 ```
